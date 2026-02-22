@@ -3,9 +3,52 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+
+    <!-- Tailwind CSS + DaisyUI -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        font-family: "Geist", sans-serif;
+        font-optical-sizing: auto;
+      }
+    </style>
+
+    <title>Job Application Tracker</title>
   </head>
   <body>
-    <h1>Hello World</h1>
+    <main class="bg-base-200">
+      <div class="container mx-auto py-10">
+        <h1 class="text-4xl font-bold mb-4">Job Application Tracker</h1>
+
+        <div class="flex justify-between gap-8">
+          <div class="grow p-6 rounded-md bg-base-100 shadow-sm">
+            <h6 class="text-lg">Total</h6>
+            <h4 class="text-3xl font-bold">8</h4>
+          </div>
+          <div class="grow p-6 rounded-md bg-base-100 shadow-sm">
+            <h6 class="text-lg">Interview</h6>
+            <h4 class="text-3xl font-bold text-green-500">0</h4>
+          </div>
+          <div class="grow p-6 rounded-md bg-base-100 shadow-sm">
+            <h6 class="text-lg">Rejected</h6>
+            <h4 class="text-3xl font-bold text-red-500">0</h4>
+          </div>
+        </div>
+      </div>
+    </main>
   </body>
 </html>

@@ -7,6 +7,7 @@ const availableJobs = [
     salary: "৳70,000 - ৳110,000",
     description:
       "Develop scalable web interfaces using React and TypeScript. Collaborate with backend teams to integrate REST APIs and improve UI performance in an agile environment.",
+    status: "not-applied",
   },
   {
     companyName: "ByteWave Solutions",
@@ -16,6 +17,7 @@ const availableJobs = [
     salary: "$90,000 - $120,000",
     description:
       "Design and maintain backend microservices using Node.js and Express. Implement authentication, optimize databases, and integrate third-party services.",
+    status: "not-applied",
   },
   {
     companyName: "AppForge Studio",
@@ -25,6 +27,7 @@ const availableJobs = [
     salary: "৳50,000 - ৳80,000",
     description:
       "Build cross-platform mobile apps with React Native and Expo. Integrate APIs, manage state, and optimize performance while working with designers.",
+    status: "not-applied",
   },
   {
     companyName: "DataSprint Analytics",
@@ -34,6 +37,7 @@ const availableJobs = [
     salary: "$20 - $30 / hour",
     description:
       "Analyze datasets, clean data, and build dashboards using Excel and BI tools. Assist in reporting and visualization for business insights.",
+    status: "not-applied",
   },
   {
     companyName: "SecureStack Labs",
@@ -43,6 +47,7 @@ const availableJobs = [
     salary: "$110,000 - $150,000",
     description:
       "Manage CI/CD pipelines and AWS infrastructure. Automate deployments, monitor reliability, and improve system scalability.",
+    status: "not-applied",
   },
   {
     companyName: "PixelCraft Agency",
@@ -52,6 +57,7 @@ const availableJobs = [
     salary: "৳40,000 - ৳65,000",
     description:
       "Create wireframes, prototypes, and design systems in Figma. Deliver user-focused designs and collaborate with developers for implementation.",
+    status: "not-applied",
   },
   {
     companyName: "NextGen Softworks",
@@ -61,6 +67,7 @@ const availableJobs = [
     salary: "$60,000 - $85,000",
     description:
       "Write and execute test cases for web and mobile applications. Perform automation testing and work with developers to ensure product quality.",
+    status: "not-applied",
   },
   {
     companyName: "BrightAI Labs",
@@ -70,11 +77,34 @@ const availableJobs = [
     salary: "$800 - $1200 / month",
     description:
       "Assist in building machine learning models and data pipelines. Work with Python, TensorFlow, and real-world datasets under senior mentorship.",
+    status: "not-applied",
   },
 ];
 
-// Render Available Jobs initially
+let totalJobs = 0;
+let interviewJobs = 0;
+let rejectedJobs = 0;
 
+// Set the value of jobs count
+for (job of availableJobs) {
+  if (job.status === "not-applied") {
+    totalJobs++;
+  } else if (job.status === "interview") {
+    interviewJobs++;
+  } else if (job.status === "rejected") {
+    rejectedJobs++;
+  }
+}
+// Show on the UI
+const totalJobsElement = document.getElementById("total-jobs");
+const interviewJobsElement = document.getElementById("interview-jobs");
+const rejectedJobsElement = document.getElementById("rejected-jobs");
+
+totalJobsElement.innerText = totalJobs;
+interviewJobsElement.innerText = interviewJobs;
+rejectedJobsElement.innerText = rejectedJobs;
+
+// Render Available Jobs initially
 const jobContainer = document.getElementById("jobs-container");
 
 availableJobs.forEach((job) => {

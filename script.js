@@ -1,5 +1,6 @@
 const availableJobs = [
   {
+    id: 1,
     companyName: "CloudNest Technologies",
     position: "Frontend Developer (React)",
     location: "Dhaka, Bangladesh",
@@ -10,6 +11,7 @@ const availableJobs = [
     status: "not-applied",
   },
   {
+    id: 2,
     companyName: "ByteWave Solutions",
     position: "Node.js Backend Engineer",
     location: "Remote",
@@ -20,6 +22,7 @@ const availableJobs = [
     status: "not-applied",
   },
   {
+    id: 3,
     companyName: "AppForge Studio",
     position: "React Native Developer",
     location: "Sylhet, Bangladesh",
@@ -30,6 +33,7 @@ const availableJobs = [
     status: "not-applied",
   },
   {
+    id: 4,
     companyName: "DataSprint Analytics",
     position: "Junior Data Analyst",
     location: "Remote",
@@ -40,6 +44,7 @@ const availableJobs = [
     status: "not-applied",
   },
   {
+    id: 5,
     companyName: "SecureStack Labs",
     position: "DevOps Engineer",
     location: "Singapore (Remote-friendly)",
@@ -50,6 +55,7 @@ const availableJobs = [
     status: "not-applied",
   },
   {
+    id: 6,
     companyName: "PixelCraft Agency",
     position: "UI/UX Designer",
     location: "Chattogram, Bangladesh",
@@ -60,6 +66,7 @@ const availableJobs = [
     status: "not-applied",
   },
   {
+    id: 7,
     companyName: "NextGen Softworks",
     position: "QA Engineer",
     location: "Remote",
@@ -70,6 +77,7 @@ const availableJobs = [
     status: "not-applied",
   },
   {
+    id: 8,
     companyName: "BrightAI Labs",
     position: "AI/ML Intern",
     location: "Bangalore, India (Hybrid)",
@@ -81,35 +89,39 @@ const availableJobs = [
   },
 ];
 
-let totalJobs = 0;
-let interviewJobs = 0;
-let rejectedJobs = 0;
+// Update Dashboard Status
+function updateDashboardStatus(jobs) {
+  let totalJobs = jobs.length;
+  let interviewJobs = 0;
+  let rejectedJobs = 0;
 
-// Set the value of jobs count
-for (job of availableJobs) {
-  if (job.status === "not-applied") {
-    totalJobs++;
-  } else if (job.status === "interview") {
-    interviewJobs++;
-  } else if (job.status === "rejected") {
-    rejectedJobs++;
+  for (const job of jobs) {
+    if (job.status === "interview") {
+      interviewJobs++;
+    } else if (job.status === "rejected") {
+      rejectedJobs++;
+    }
   }
+
+  const totalJobsElement = document.getElementById("total-jobs");
+  const interviewJobsElement = document.getElementById("interview-jobs");
+  const rejectedJobsElement = document.getElementById("rejected-jobs");
+
+  totalJobsElement.innerText = totalJobs;
+  interviewJobsElement.innerText = interviewJobs;
+  rejectedJobsElement.innerText = rejectedJobs;
 }
-// Show on the UI
-const totalJobsElement = document.getElementById("total-jobs");
-const interviewJobsElement = document.getElementById("interview-jobs");
-const rejectedJobsElement = document.getElementById("rejected-jobs");
+updateDashboardStatus(availableJobs);
 
-totalJobsElement.innerText = totalJobs;
-interviewJobsElement.innerText = interviewJobs;
-rejectedJobsElement.innerText = rejectedJobs;
-
-// Render Available Jobs initially
+// Render Available Jobs
 const jobContainer = document.getElementById("jobs-container");
 
-availableJobs.forEach((job) => {
-  let jobCardUI = document.createElement("div");
-  jobCardUI.innerHTML = `<div class="grow p-6 rounded-md bg-base-100 shadow-sm">
+function renderJobs(jobs) {
+  jobContainer.innerHTML = "";
+
+  jobs.forEach((job) => {
+    let jobCardUI = document.createElement("div");
+    jobCardUI.innerHTML = `<div id=${job.id} class="grow p-6 rounded-md bg-base-100 shadow-sm">
               <div class="flex justify-between items-center mb-4">
                 <div>
                   <h4 class="text-lg font-semibold">${job.companyName}</h4>
@@ -123,23 +135,56 @@ availableJobs.forEach((job) => {
                 ${job.location} • ${job.type} • ${job.salary}
               </p>
 
-              <button class="bg-cyan-50 btn border-none uppercase mb-3">
-                Not Applied
-              </button>
+              ${
+                job.status === "not-applied"
+                  ? `<button class="bg-cyan-50 btn btn-sm border-none uppercase mb-3">Not Applied</button>`
+                  : ""
+              }
+
+                ${
+                  job.status === "interview"
+                    ? `<button class="btn btn-sm btn-success uppercase mb-3">Interview</button>`
+                    : ""
+                }
+                ${
+                  job.status === "rejected"
+                    ? `<button class="btn btn-sm btn-error uppercase mb-3">Rejected</button>`
+                    : ""
+                }
 
               <p class="text-sm mb-3">
                 ${job.description}
               </p>
 
               <div class="space-x-1 space-y-1">
-                <button class="btn btn-outline uppercase btn-success">
+                <button data-action="interview" class="btn btn-outline uppercase btn-success">
                   Interview
                 </button>
-                <button class="btn btn-outline uppercase btn-error">
+                <button data-action="rejected" class="btn btn-outline uppercase btn-error">
                   Rejected
                 </button>
               </div>
             </div>`;
 
-  jobContainer.appendChild(jobCardUI.firstElementChild);
+    jobContainer.appendChild(jobCardUI.firstElementChild);
+  });
+}
+renderJobs(availableJobs);
+
+// Handle Clicking on Interview and Rejected Button
+jobContainer.addEventListener("click", (event) => {
+  const action = event.target.dataset.action;
+  const id = event.target.parentNode.parentNode.id;
+
+  const job = availableJobs.find((j) => j.id == id);
+
+  if (action === "interview") {
+    job.status = "interview";
+  }
+
+  if (action === "rejected") {
+    job.status = "rejected";
+  }
+  renderJobs(availableJobs);
+  updateDashboardStatus(availableJobs);
 });

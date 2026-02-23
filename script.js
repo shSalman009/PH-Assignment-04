@@ -88,6 +88,7 @@ const availableJobs = [
     status: "not-applied",
   },
 ];
+let activeTab = "all";
 
 // Update Dashboard Status
 function updateDashboardStatus(jobs) {
@@ -113,15 +114,41 @@ function updateDashboardStatus(jobs) {
 }
 updateDashboardStatus(availableJobs);
 
+// Toggling between tabs
+const toggleTabsContainerElement = document.getElementById("toggle-tabs");
+function updateToggleTabClasses(event) {
+  event.target.classList.replace("bg-base-100", "btn-primary");
+  Array.from(event.target.parentNode.children).forEach((c) => {
+    if (c != event.target) {
+      c.classList.replace("btn-primary", "bg-base-100");
+    }
+  });
+}
+function toggleTabs(jobs) {
+  toggleTabsContainerElement.addEventListener("click", (event) => {
+    const selectedElement = event.target.dataset.tab;
+
+    if (selectedElement == "all") {
+      updateToggleTabClasses(event);
+      activeTab = "all";
+    } else if (selectedElement == "interview") {
+      updateToggleTabClasses(event);
+      activeTab = "interview";
+    } else if (selectedElement == "rejected") {
+      updateToggleTabClasses(event);
+      activeTab = "rejected";
+    }
+    renderJobs(jobs, activeTab);
+  });
+}
+toggleTabs(availableJobs);
+
 // Render Available Jobs
 const jobContainer = document.getElementById("jobs-container");
-
-function renderJobs(jobs) {
-  jobContainer.innerHTML = "";
-
-  jobs.forEach((job) => {
-    let jobCardUI = document.createElement("div");
-    jobCardUI.innerHTML = `<div id=${job.id} class="grow p-6 rounded-md bg-base-100 shadow-sm">
+const noJobsElement = document.getElementById("no-jobs-available");
+function createJobElement(job) {
+  const el = document.createElement("div");
+  el.innerHTML = `<div id=${job.id} class="grow p-6 rounded-md bg-base-100 shadow-sm">
               <div class="flex justify-between items-center mb-4">
                 <div>
                   <h4 class="text-lg font-semibold">${job.companyName}</h4>
@@ -165,11 +192,29 @@ function renderJobs(jobs) {
                 </button>
               </div>
             </div>`;
-
-    jobContainer.appendChild(jobCardUI.firstElementChild);
-  });
+  return el.firstElementChild;
 }
-renderJobs(availableJobs);
+function renderJobs(jobs, selected) {
+  jobContainer.innerHTML = "";
+
+  let filteredJobs = [];
+  if (selected === "all") {
+    filteredJobs = jobs;
+  } else {
+    filteredJobs = jobs.filter((job) => job.status === selected);
+  }
+
+  if (filteredJobs.length > 0) {
+    filteredJobs.forEach((job) => {
+      noJobsElement.classList.add("hidden");
+
+      jobContainer.appendChild(createJobElement(job));
+    });
+  } else {
+    noJobsElement.classList.remove("hidden");
+  }
+}
+renderJobs(availableJobs, activeTab);
 
 // Handle Clicking on Interview and Rejected Button
 jobContainer.addEventListener("click", (event) => {
@@ -185,6 +230,6 @@ jobContainer.addEventListener("click", (event) => {
   if (action === "rejected") {
     job.status = "rejected";
   }
-  renderJobs(availableJobs);
+  renderJobs(availableJobs, activeTab);
   updateDashboardStatus(availableJobs);
 });

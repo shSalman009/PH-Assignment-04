@@ -88,19 +88,22 @@ const availableJobs = [
     status: "not-applied",
   },
 ];
+let totalJobsCount = 0;
+let interviewJobsCount = 0;
+let rejectedJobsCount = 0;
 let activeTab = "all";
 
 // Update Dashboard Status
 function updateDashboardStatus(jobs) {
-  let totalJobs = jobs.length;
-  let interviewJobs = 0;
-  let rejectedJobs = 0;
+  totalJobsCount = jobs.length;
+  interviewJobsCount = 0;
+  rejectedJobsCount = 0;
 
   for (const job of jobs) {
     if (job.status === "interview") {
-      interviewJobs++;
+      interviewJobsCount++;
     } else if (job.status === "rejected") {
-      rejectedJobs++;
+      rejectedJobsCount++;
     }
   }
 
@@ -108,11 +111,27 @@ function updateDashboardStatus(jobs) {
   const interviewJobsElement = document.getElementById("interview-jobs");
   const rejectedJobsElement = document.getElementById("rejected-jobs");
 
-  totalJobsElement.innerText = totalJobs;
-  interviewJobsElement.innerText = interviewJobs;
-  rejectedJobsElement.innerText = rejectedJobs;
+  totalJobsElement.innerText = totalJobsCount;
+  interviewJobsElement.innerText = interviewJobsCount;
+  rejectedJobsElement.innerText = rejectedJobsCount;
 }
 updateDashboardStatus(availableJobs);
+
+// Update Available Job Status
+function updateAvailableJobStatus() {
+  const status = document.getElementById("available-job-status");
+
+  let content = "";
+  if (activeTab === "all") {
+    content = `${totalJobsCount} Jobs`;
+  } else if (activeTab === "interview") {
+    content = `${interviewJobsCount} of ${totalJobsCount}`;
+  } else if (activeTab === "rejected") {
+    content = `${rejectedJobsCount} of ${totalJobsCount}`;
+  }
+  status.innerText = content;
+}
+updateAvailableJobStatus();
 
 // Toggling between tabs
 const toggleTabsContainerElement = document.getElementById("toggle-tabs");
@@ -213,6 +232,7 @@ function renderJobs(jobs, selected) {
   } else {
     noJobsElement.classList.remove("hidden");
   }
+  updateAvailableJobStatus();
 }
 renderJobs(availableJobs, activeTab);
 
@@ -230,6 +250,6 @@ jobContainer.addEventListener("click", (event) => {
   if (action === "rejected") {
     job.status = "rejected";
   }
-  renderJobs(availableJobs, activeTab);
   updateDashboardStatus(availableJobs);
+  renderJobs(availableJobs, activeTab);
 });

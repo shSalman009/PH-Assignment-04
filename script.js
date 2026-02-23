@@ -1,4 +1,4 @@
-const availableJobs = [
+let availableJobs = [
   {
     id: 1,
     companyName: "CloudNest Technologies",
@@ -143,24 +143,22 @@ function updateToggleTabClasses(event) {
     }
   });
 }
-function toggleTabs(jobs) {
-  toggleTabsContainerElement.addEventListener("click", (event) => {
-    const selectedElement = event.target.dataset.tab;
 
-    if (selectedElement == "all") {
-      updateToggleTabClasses(event);
-      activeTab = "all";
-    } else if (selectedElement == "interview") {
-      updateToggleTabClasses(event);
-      activeTab = "interview";
-    } else if (selectedElement == "rejected") {
-      updateToggleTabClasses(event);
-      activeTab = "rejected";
-    }
-    renderJobs(jobs, activeTab);
-  });
-}
-toggleTabs(availableJobs);
+toggleTabsContainerElement.addEventListener("click", (event) => {
+  const selectedElement = event.target.dataset.tab;
+
+  if (selectedElement == "all") {
+    updateToggleTabClasses(event);
+    activeTab = "all";
+  } else if (selectedElement == "interview") {
+    updateToggleTabClasses(event);
+    activeTab = "interview";
+  } else if (selectedElement == "rejected") {
+    updateToggleTabClasses(event);
+    activeTab = "rejected";
+  }
+  renderJobs(availableJobs, activeTab);
+});
 
 // Render Available Jobs
 const jobContainer = document.getElementById("jobs-container");
@@ -173,7 +171,7 @@ function createJobElement(job) {
                   <h4 class="text-lg font-semibold">${job.companyName}</h4>
                   <p class="opacity-70">${job.position}</p>
                 </div>
-                <button class="btn btn-circle">
+                <button data-action="delete" class="btn btn-circle">
                   <i class="fa-regular fa-trash-can"></i>
                 </button>
               </div>
@@ -183,18 +181,18 @@ function createJobElement(job) {
 
               ${
                 job.status === "not-applied"
-                  ? `<button class="bg-cyan-50 btn btn-sm border-none uppercase mb-3">Not Applied</button>`
+                  ? `<div class="bg-cyan-100 badge border-none text-sm font-medium uppercase rounded-sm px-2 py-4 mb-3">Not Applied</div>`
                   : ""
               }
 
                 ${
                   job.status === "interview"
-                    ? `<button class="btn btn-sm btn-success uppercase mb-3">Interview</button>`
+                    ? `<div class="badge badge-success border-none text-sm font-medium uppercase rounded-sm px-2 py-4 mb-3">Interview</div>`
                     : ""
                 }
                 ${
                   job.status === "rejected"
-                    ? `<button class="btn btn-sm btn-error uppercase mb-3">Rejected</button>`
+                    ? `<div class="badge badge-success border-none text-sm font-medium uppercase rounded-sm px-2 py-4 mb-3">Rejected</div>`
                     : ""
                 }
 
@@ -238,8 +236,9 @@ renderJobs(availableJobs, activeTab);
 
 // Handle Clicking on Interview and Rejected Button
 jobContainer.addEventListener("click", (event) => {
-  const action = event.target.dataset.action;
-  const id = event.target.parentNode.parentNode.id;
+  const actionBtn = event.target.closest("[data-action]");
+  const action = actionBtn.dataset.action;
+  const id = actionBtn.parentNode.parentNode.id;
 
   const job = availableJobs.find((j) => j.id == id);
 
@@ -250,6 +249,11 @@ jobContainer.addEventListener("click", (event) => {
   if (action === "rejected") {
     job.status = "rejected";
   }
+
+  if (action === "delete") {
+    availableJobs = availableJobs.filter((j) => j.id != id);
+  }
+
   updateDashboardStatus(availableJobs);
   renderJobs(availableJobs, activeTab);
 });

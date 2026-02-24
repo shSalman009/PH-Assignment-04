@@ -116,6 +116,7 @@ function updateDashboardStatus(jobs) {
   rejectedJobsElement.innerText = rejectedJobsCount;
 }
 updateDashboardStatus(availableJobs);
+console.log(document.querySelectorAll(".flex"));
 
 // Update Available Job Status
 function updateAvailableJobStatus() {
@@ -125,9 +126,9 @@ function updateAvailableJobStatus() {
   if (activeTab === "all") {
     content = `${totalJobsCount} Jobs`;
   } else if (activeTab === "interview") {
-    content = `${interviewJobsCount} of ${totalJobsCount}`;
+    content = `${interviewJobsCount} of ${totalJobsCount} Jobs`;
   } else if (activeTab === "rejected") {
-    content = `${rejectedJobsCount} of ${totalJobsCount}`;
+    content = `${rejectedJobsCount} of ${totalJobsCount} Jobs`;
   }
   status.innerText = content;
 }
